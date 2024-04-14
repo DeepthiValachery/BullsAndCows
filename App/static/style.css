@@ -5,23 +5,24 @@ body {
     font-family: cursive;
     line-height: 1.5;
     min-height: 100vh;
-    background: url('background.png'); /* Replace with your preferred image URL */
+    background: url('images/gameBG.png'); /* Replace with your preferred image URL */
     background-size: cover;
     background-position: center;
     flex-direction: column;
     margin: 0;
+    overflow: hidden;
   }
   
   .main {
-    background-color: rgba(255, 150, 0, 0.1);
-    border: 0px;
-    border-radius: 0px;
-    box-shadow: none;
-    padding: 10px 20px;
-    transition: transform 0.2s;
-    width: 390px;
-    text-align: center;
-  }
+      background-color: #fdddbf;;
+      border: 0px;
+      border-radius: 10px;
+      box-shadow: none;
+      padding: 10px 20px;
+      transition: transform 0.2s;
+      width: 390px;
+      text-align: center;
+    }
   
   .ingame-main {
       max-width: 800px;
