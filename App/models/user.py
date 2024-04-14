@@ -24,3 +24,27 @@ class User(db.Model):
         """Check hashed password."""
         return check_password_hash(self.password, password)
 
+
+class CurrentGame(db.Model):
+    gameID = db.Column(db.Integer,primary_key = True,nullable=False)
+    userId = db.Column(db.Integer, db.ForeignKey('user.id'),nullable=False)
+    secretNumber = db.Column(db.String(120), nullable=False)
+    attempts_left = db.Column(db.Integer, nullable=True)
+    is_Won = db.Column(db.Boolean)
+
+    def is_game_over(self, guess):
+        if (guess == this.secretNumber ):
+            return True
+        return False
+
+    def check_guess (self,guess):
+        cows = 0
+        bulls = 0
+        for i in range(4):
+            if(this.secretNumber[i] == guess[i]):
+                bulls+=1
+            for j in range(4):
+                if( (i != j) and this.secretNumber[i] == guess[j] ):
+                    cows+=1
+        return str(bulls) and str(cows)
+
