@@ -26,11 +26,17 @@ class User(db.Model):
 
 
 class CurrentGame(db.Model):
-    gameID = db.Column(db.Integer,primary_key = True,nullable=False)
-    userId = db.Column(db.Integer, db.ForeignKey('user.id'),nullable=False)
+    id = db.Column(db.Integer,primary_key = True,nullable=False)
+    userID = db.Column(db.Integer, db.ForeignKey('user.id'),nullable=False)
     secretNumber = db.Column(db.String(120), nullable=False)
     attempts_left = db.Column(db.Integer, nullable=True)
     is_Won = db.Column(db.Boolean)
+
+    def __init__(self, userID, secretNumber, attempts_left = 12, is_Won = False):
+        self.userID = userID
+        self.secretNumber = secretNumber
+        self.attempts_left = attempts_left
+        self.is_Won = is_Won
 
     def is_game_over(self, guess):
         if (guess == this.secretNumber ):
@@ -47,4 +53,21 @@ class CurrentGame(db.Model):
                 if( (i != j) and this.secretNumber[i] == guess[j] ):
                     cows+=1
         return str(bulls) and str(cows)
+
+class UserGuesses(db.Model):
+    guessID = db.Column(db.Integer,primary_key = True,nullable=False)
+    userID = db.Column(db.Integer, db.ForeignKey('user.id'),nullable=False)
+    gameID = db.Column(db.Integer, db.ForeignKey('CurrentGame.id'),nullable=False)
+    guess = db.Column(db.String(4), nullable=False)
+    bullsCount = db.Column(db.Integer, nullable=True)
+    cowsCount = db.Column(db.Integer, nullable=True)
+
+    def __init__(self, userID, gameID, guess):
+        self.userID = userID
+        self.gameID = gameID
+        self.guess = guess
+        bulls, cows = game.check_guess(guess)
+        self.bullsCount = bulls
+        self.cowsCount = cows
+
 
