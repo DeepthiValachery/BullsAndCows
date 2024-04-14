@@ -5,7 +5,7 @@ body {
     font-family: cursive;
     line-height: 1.5;
     min-height: 100vh;
-    background: url('background.png'); /* Replace with your preferred image URL */
+    background: url('/images/gameBG.png'); /* Replace with your preferred image URL */
     background-size: cover;
     background-position: center;
     flex-direction: column;
