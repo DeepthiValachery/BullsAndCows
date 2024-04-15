@@ -39,7 +39,7 @@ class CurrentGame(db.Model):
         self.is_Won = is_Won
 
     def is_game_over(self, guess):
-        if (guess == this.secretNumber ):
+        if (guess == self.secretNumber ):
             return True
         return False
 
@@ -47,12 +47,11 @@ class CurrentGame(db.Model):
         cows = 0
         bulls = 0
         for i in range(4):
-            if(this.secretNumber[i] == guess[i]):
-                bulls+=1
-            for j in range(4):
-                if( (i != j) and this.secretNumber[i] == guess[j] ):
-                    cows+=1
-        return str(bulls) and str(cows)
+            if self.secretNumber[i] == guess[i]:
+                bulls += 1
+            elif guess[i] in self.secretNumber:
+                cows += 1
+        return bulls, cows
 
 class UserGuesses(db.Model):
     guessID = db.Column(db.Integer,primary_key = True,nullable=False)
