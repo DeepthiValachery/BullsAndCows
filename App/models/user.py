@@ -24,7 +24,6 @@ class User(db.Model):
         """Check hashed password."""
         return check_password_hash(self.password, password)
 
-
 class CurrentGame(db.Model):
     __tablename__ = "current_game"
     id = db.Column(db.Integer, primary_key = True)
