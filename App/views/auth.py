@@ -50,12 +50,20 @@ def login_action():
         set_access_cookies(response, token) 
         return render_template("game_play.html")
     
+# @auth_views.route('/logout', methods=['GET'])
+# def logout_action():
+#     response = redirect(request.referrer) 
+#     flash("Logged Out!")
+#     unset_jwt_cookies(response)
+#     return response
+
+#editted logout
 @auth_views.route('/logout', methods=['GET'])
 def logout_action():
     response = redirect(request.referrer) 
     flash("Logged Out!")
     unset_jwt_cookies(response)
-    return response
+    return render_template("login.html")
 
 @auth_views.route('/signup', methods=['POST'])
 def signup_action():
