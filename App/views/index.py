@@ -1,6 +1,6 @@
 from flask import Blueprint, redirect, render_template, request, send_from_directory, jsonify
 from App.models import db
-from App.controllers import create_user
+from App.controllers import create_user, login
 
 index_views = Blueprint('index_views', __name__, template_folder='../templates')
 
@@ -33,29 +33,4 @@ def game_page():
 def leaderboard_page():
     return render_template("leaderboard.html")
 
-def login_user(username, password):
-  user = User.query.filter_by(username=username).first()
-  if user and user.check_password(password):
-    token = create_access_token(identity=user)
-    return token
-  return None
 
-@index_views.route("/login", methods=['POST'])
-def login_action():
-  # implement login
-  data = request.form
-  token = login_user(data['username'], data['password'])
-  print(token)
-  response = None
-  if token:
-    flash('Logged in successfully.')  # send message to next page
-    response = redirect(
-        url_for('game_play'))  # redirect to main page if login successful
-    set_access_cookies(response, token)
-  else:
-    flash('Invalid username or password')  # send message to next page
-  return response
-
-# @index_views.route("/login", methods=['POST'])
-# def signup_action():
-#     #implement user signup
