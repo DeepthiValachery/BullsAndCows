@@ -55,14 +55,14 @@ class CurrentGame(db.Model):
 
 class UserGuesses(db.Model):
     guessID = db.Column(db.Integer,primary_key = True,nullable=False)
-    #userID = db.Column(db.Integer, db.ForeignKey('user.id'),nullable=False)
+    userID = db.Column(db.Integer, db.ForeignKey('user.id'),nullable=False)
     gameID = db.Column(db.Integer, db.ForeignKey('CurrentGame.gameID'),nullable=False)
     guess = db.Column(db.String(4), nullable=False)
     bullsCount = db.Column(db.Integer, nullable=True)
     cowsCount = db.Column(db.Integer, nullable=True)
 
     def __init__(self, userID, gameID, guess):
-        #self.userID = userID
+        self.userID = userID
         self.gameID = gameID
         self.guess = guess
         cows = 0
