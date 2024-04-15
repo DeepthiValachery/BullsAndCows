@@ -26,6 +26,7 @@ class User(db.Model):
 
 
 class CurrentGame(db.Model):
+    __tablename__ = "current_game"
     id = db.Column(db.Integer, primary_key = True)
     userID = db.Column(db.Integer, db.ForeignKey('user.id'),nullable=False)
     secretNumber = db.Column(db.String(120), nullable=False)
@@ -57,7 +58,7 @@ class CurrentGame(db.Model):
 class UserGuesses(db.Model):
     guessID = db.Column(db.Integer,primary_key = True)
     userID = db.Column(db.Integer, db.ForeignKey('user.id'))
-    gameID = db.Column(db.Integer, db.ForeignKey('currentGame.id'))
+    gameID = db.Column(db.Integer, db.ForeignKey('current_game.id'))
     guess = db.Column(db.String(4), nullable=False)
     bullsCount = db.Column(db.Integer, nullable=True)
     cowsCount = db.Column(db.Integer, nullable=True)
