@@ -53,6 +53,7 @@ class CurrentGame(db.Model):
                 cows += 1
         return bulls, cows
 
+
 class UserGuesses(db.Model):
     guessID = db.Column(db.Integer,primary_key = True)
     userID = db.Column(db.Integer, db.ForeignKey('User.id'))
