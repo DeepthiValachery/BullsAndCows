@@ -27,7 +27,7 @@ class User(db.Model):
 
 class CurrentGame(db.Model):
     id = db.Column(db.Integer, primary_key = True)
-    userID = db.Column(db.Integer, db.ForeignKey('user.id'),nullable=False)
+    userID = db.Column(db.Integer, db.ForeignKey('User.id'),nullable=False)
     secretNumber = db.Column(db.String(120), nullable=False)
     attempts_left = db.Column(db.Integer, nullable=True)
     is_Won = db.Column(db.Boolean)
@@ -43,20 +43,20 @@ class CurrentGame(db.Model):
             return True
         return False
 
-    # def check_guess (self,guess):
-    #     cows = 0
-    #     bulls = 0
-    #     for i in range(4):
-    #         if self.secretNumber[i] == guess[i]:
-    #             bulls += 1
-    #         elif guess[i] in self.secretNumber:
-    #             cows += 1
-    #     return bulls, cows
+    def check_guess (self,guess):
+        cows = 0
+        bulls = 0
+        for i in range(4):
+            if self.secretNumber[i] == guess[i]:
+                bulls += 1
+            elif guess[i] in self.secretNumber:
+                cows += 1
+        return bulls, cows
 
 class UserGuesses(db.Model):
     guessID = db.Column(db.Integer,primary_key = True)
-    userID = db.Column(db.Integer, db.ForeignKey('user.id'))
-    gameID = db.Column(db.Integer, db.ForeignKey('currentgame.id'))
+    userID = db.Column(db.Integer, db.ForeignKey('User.id'))
+    gameID = db.Column(db.Integer, db.ForeignKey('CurrentGame.id'))
     guess = db.Column(db.String(4), nullable=False)
     bullsCount = db.Column(db.Integer, nullable=True)
     cowsCount = db.Column(db.Integer, nullable=True)
@@ -65,13 +65,8 @@ class UserGuesses(db.Model):
         self.userID = userID
         self.gameID = gameID
         self.guess = guess
-        cows = 0
-        bulls = 0
-        for i in range(4):
-            if self.secretNumber[i] == guess[i]:
-                bulls += 1
-            elif guess[i] in self.secretNumber:
-                cows += 1
+        game = CurrentGame.query.get(gameID)
+        bulls,cows = game.check_guess (guess)
         self.bullsCount = bulls
         self.cowsCount = cows
 
