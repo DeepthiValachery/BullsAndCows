@@ -7,12 +7,24 @@
 </head>
 
 <body>
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+        <div class="flash-messages">
+            <ul>
+            {% for message in messages %}
+                <li>{{ message }}</li>
+            {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+{% endwith %}
+
   <div class="main">
     <h1>Bulls & Cows</h1>
-    <form action="">
+    <form action="/signup" method="POST">
       <input type="text"
-        id="first"
-        name="first"
+        id="username"
+        name="username"
         placeholder="Enter Username" required>
 
       <input type="password"
@@ -21,10 +33,11 @@
         placeholder="Enter Password" required>
 
       <div class="wrap">
-        <a href="/game" class="login-button">Signup</a>
+        <button type="submit" class="login-button">Signup</button>
+        <!-- <a href="/users/signup" class="login-button">Signup</a> -->
       </div>
     </form>
-    <p>Already have an account? 
+    <p>Already have an account?
       <a href="/"
       style="text-decoration: none;">
         Login to your account!

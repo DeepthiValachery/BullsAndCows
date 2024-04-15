@@ -4,7 +4,8 @@ from flask_jwt_extended import jwt_required, current_user, unset_jwt_cookies, se
 from.index import index_views
 
 from App.controllers import (
-    login
+    login,
+    create_user
 )
 
 auth_views = Blueprint('auth_views', __name__, template_folder='../templates')
@@ -24,6 +25,18 @@ def identify_page():
     return render_template('message.html', title="Identify", message=f"You are logged in as {current_user.id} - {current_user.username}")
     
 
+# @auth_views.route('/login', methods=['POST'])
+# def login_action():
+#     data = request.form
+#     token = login(data['username'], data['password'])
+#     response = redirect(request.referrer)
+#     if not token:
+#         flash('Bad username or password given'), 401
+#     else:
+#         flash('Login Successful')
+#         set_access_cookies(response, token) 
+#     return response
+
 @auth_views.route('/login', methods=['POST'])
 def login_action():
     data = request.form
@@ -31,11 +44,12 @@ def login_action():
     response = redirect(request.referrer)
     if not token:
         flash('Bad username or password given'), 401
+        return response
     else:
         flash('Login Successful')
         set_access_cookies(response, token) 
-    return response
-
+        return render_template("game_play.html")
+    
 @auth_views.route('/logout', methods=['GET'])
 def logout_action():
     response = redirect(request.referrer) 
@@ -43,6 +57,17 @@ def logout_action():
     unset_jwt_cookies(response)
     return response
 
+@auth_views.route('/signup', methods=['POST'])
+def signup_action():
+    data = request.form
+    new_user = create_user(data['username'], data['password'])
+    response = redirect(request.referrer)
+    if not new_user:
+        flash('Retry')
+    else:
+        flash('Account Created')
+    return response
+    
 '''
 API Routes
 '''
