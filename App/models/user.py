@@ -34,12 +34,12 @@ class CurrentGame(db.Model):
 
     def __init__(self, userID, secretNumber, attempts_left = 12, is_Won = False):
         self.userID = userID
-        self.secretNumber = secretNumber
+        self.secretNumber = self.secretNumber
         self.attempts_left = attempts_left
         self.is_Won = is_Won
 
     def is_game_over(self, guess):
-        if (guess == self.secretNumber ):
+        if (guess == self.secretNumber):
             return True
         return False
 
@@ -52,7 +52,6 @@ class CurrentGame(db.Model):
             elif guess[i] in self.secretNumber:
                 cows += 1
         return bulls, cows
-
 
 class UserGuesses(db.Model):
     guessID = db.Column(db.Integer,primary_key = True)
