@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, jsonify, request, flash, send_from_directory, flash, redirect, url_for
 from flask_jwt_extended import jwt_required, current_user, unset_jwt_cookies, set_access_cookies
-
 from.index import index_views
+
 
 from App.controllers import (
     login,
@@ -48,7 +48,7 @@ def login_action():
     else:
         flash('Login Successful')
         set_access_cookies(response, token) 
-        return render_template("game_play.html")
+        return render_template("welcome.html")
     
 # @auth_views.route('/logout', methods=['GET'])
 # def logout_action():
