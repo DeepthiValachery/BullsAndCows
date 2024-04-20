@@ -5,10 +5,20 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username =  db.Column(db.String, nullable=False, unique=True)
     password = db.Column(db.String(120), nullable=False)
+    last_play_time = db.Column(db.DateTime, nullable=True)
 
     def __init__(self, username, password):
         self.username = username
         self.set_password(password)
+
+    def set_last_play_time(self):
+        self.last_play_time = datetime.now()
+
+    def can_play_game(self):
+        if not self.last_play_time:
+            return True  # if the user hasn't played before
+        time_since_last_play = datetime.now() - self.last_play_time
+        return time_since_last_play >= timedelta(hours=24)
 
     def get_json(self):
         return{
@@ -29,13 +39,13 @@ class CurrentGame(db.Model):
     id = db.Column(db.Integer, primary_key = True)
     userID = db.Column(db.Integer, db.ForeignKey('user.id'),nullable=False)
     secretNumber = db.Column(db.String(120), nullable=False)
-    attempts_left = db.Column(db.Integer, nullable=True)
+    #attempts_left = db.Column(db.Integer, nullable=True)
     is_Won = db.Column(db.Boolean)
 
-    def __init__(self, userID, secretNumber, attempts_left = 12, is_Won = False):
+    def __init__(self, userID, secretNumber, is_Won = False):
         self.userID = userID
         self.secretNumber = self.secretNumber
-        self.attempts_left = attempts_left
+        #self.attempts_left = attempts_left
         self.is_Won = is_Won
 
     def is_game_over(self, guess):
