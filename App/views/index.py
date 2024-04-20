@@ -82,7 +82,7 @@ def submit_guess():
                 user_guesses = UserGuesses(userID=current_game.userID, gameID=current_game.id, guess=user_guess)
                 db.session.add(user_guesses)
                 db.session.commit()
-                return jsonify(message="Congratulations! You guessed the correct number.", bulls=bulls, cows=cows)
+                return jsonify(message="Congratulations! You guessed the correct number.")
                 
             bulls, cows = current_game.check_guess(user_guess)
             user_guesses = UserGuesses(userID=current_game.userID, gameID=current_game.id, guess=user_guess)
@@ -90,7 +90,7 @@ def submit_guess():
             user_guesses.cowsCount = cows
             db.session.add(user_guesses)
             db.session.commit()
-            return jsonify(message="Incorrect guess. Keep trying!")
+            return jsonify(message="Incorrect guess. Keep trying!", bulls=bulls, cows=cows)
         except Exception as e:
             return jsonify(message="An error occurred: {}".format(str(e))), 500
     else:
