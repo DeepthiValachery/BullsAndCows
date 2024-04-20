@@ -1,6 +1,6 @@
 from flask import Blueprint, redirect, render_template, request, send_from_directory, jsonify, url_for
 from flask_jwt_extended import jwt_required
-from App.models import db, CurrentGame, User
+from App.models import db, CurrentGame, User, UserGuesses
 from App.controllers import create_user, login, get_user
 import random
 from datetime import date, datetime
@@ -42,7 +42,6 @@ def signup_page():
     return render_template("signup.html")
 
 @index_views.route("/game", methods=['GET'])
-@jwt_required()
 def game_page():
     #generate the daily secret number for the game
     secret_number = generate_secret_number()
@@ -55,7 +54,7 @@ def game_page():
         return render_template("game_play.html", existing_game = existing_game )
     else:
         # No existing game with the same user ID and secret number, add the new game to the database
-        new_game = CurrentGame(userID= 1, secretNumber=secret_number, attempts_left=12, is_Won=False)
+        new_game = CurrentGame(userID= 1, secretNumber=secret_number, is_Won=False)
         db.session.add(new_game)
         db.session.commit()
         return render_template("game_play.html", new_game = new_game)
