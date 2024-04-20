@@ -133,6 +133,8 @@ body {
     padding: 10px 70px;
     margin-bottom: 20px;
     display: flex;
+    overflow-y: scroll;
+    max-height: 50vh;
   }
   
   table {

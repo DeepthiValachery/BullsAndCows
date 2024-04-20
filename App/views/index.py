@@ -60,7 +60,6 @@ def game_page():
         db.session.add(new_game)
         db.session.commit()
         return render_template("game_play.html", new_game = new_game,  current_user_ID= current_user_ID, user_guesses=past_guesses)
-        
 
 @index_views.route("/leaderboard", methods=['GET'])
 def leaderboard_page():
