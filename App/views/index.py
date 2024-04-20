@@ -40,38 +40,37 @@ def init():
 def signup_page():
     return render_template("signup.html")
 
-@index_views.route("/game", methods=['GET', 'POST'])
+@index_views.route("/game", methods=['GET'])
 def game_page():
-    user = User.query.filter_by(username='bob').first()
-    if request.method == 'GET':
-        if user.can_play_game():
-            #generate the secret number for the game
-            secret_number = generate_secret_number()
-            new_game = CurrentGame(userID=1, secretNumber=secret_number, is_Won=False)
-            db.session.add(new_game)
-            user.set_last_play_time()
-            db.session.commit()
-            return render_template("game_play.html")
-        else:
-            time_since_last_play = datetime.now() - user.last_play_time
-            hours_left = 24 - (time_since_last_play.total_seconds() / 3600)
-            return jsonify (message="You have already played today. Please wait {hours_left:.2f} hours before playing again")
-    
-    elif request.method == 'POST':
+    #generate the secret number for the game
+    secret_number = generate_secret_number()
+    new_game = CurrentGame(userID=1,  secretNumber = secret_number, is_Won = False)
+    return render_template("game_play.html")
+        
+
+@index_views.route("/leaderboard", methods=['GET'])
+def leaderboard_page():
+    return render_template("leaderboard.html")
+
+#submit guess route
+@index_views.route("/submit_guess", methods=['POST'])
+def submit_guess():
+    try:
         user_guess = request.form.get ('user_guess')
         current_game = CurrentGame.query.first()
-        
+        if current_game is None:
+            return jsonify(message="No current game found"), 404
+            
         if current_game.is_Won:
             return jsonify(message="Game is already won. You cannot submit more guesses.")
-        #current_game.attempts_left -= 1
-        
+            
         if current_game.is_game_over(user_guess):
             current_game.is_Won = True
             user_guesses = UserGuesses(userID=current_game.userID, gameID=current_game.id, guess=user_guess)
             db.session.add(user_guesses)
             db.session.commit()
             return jsonify(message="Congratulations! You guessed the correct number.")
-        
+            
         bulls, cows = current_game.check_guess(user_guess)
         user_guesses = UserGuesses(userID=current_game.userID, gameID=current_game.id, guess=user_guess)
         user_guesses.bullsCount = bulls
@@ -79,9 +78,5 @@ def game_page():
         db.session.add(user_guesses)
         db.session.commit()
         return jsonify(message="Incorrect guess. Keep trying!")
-
-@index_views.route("/leaderboard", methods=['GET'])
-def leaderboard_page():
-    return render_template("leaderboard.html")
-
-
+    except Exception as e:
+        return jsonify(message="An error occurred: {}".format(str(e))), 500
