@@ -1,5 +1,6 @@
 from werkzeug.security import check_password_hash, generate_password_hash
 from App.database import db
+from datetime import datetime, timedelta 
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -44,7 +45,7 @@ class CurrentGame(db.Model):
 
     def __init__(self, userID, secretNumber, is_Won = False):
         self.userID = userID
-        self.secretNumber = self.secretNumber
+        self.secretNumber = secretNumber
         #self.attempts_left = attempts_left
         self.is_Won = is_Won
 

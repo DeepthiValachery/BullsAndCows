@@ -1,8 +1,8 @@
 from flask import Blueprint, redirect, render_template, request, send_from_directory, jsonify, url_for
-from App.models import db, CurrentGame
+from App.models import db, CurrentGame, User
 from App.controllers import create_user, login, get_user
 import random
-from datetime import date
+from datetime import date, datetime
 
 index_views = Blueprint('index_views', __name__, template_folder='../templates')
 
@@ -47,7 +47,7 @@ def game_page():
         if user.can_play_game():
             #generate the secret number for the game
             secret_number = generate_secret_number()
-            new_game = CurrentGame(userID=1,  secretNumber = secret_number, attempts_left = None, is_Won = False)
+            new_game = CurrentGame(userID=1, secretNumber=secret_number, is_Won=False)
             db.session.add(new_game)
             user.set_last_play_time()
             db.session.commit()

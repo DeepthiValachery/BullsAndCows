@@ -13,9 +13,9 @@
       <h1>Bulls & Cows</h1>
       <a href="/leaderboard" class="button">View History</a>
     </div>
+    
     <div class="game-card">
-      
-      <table>
+      <table id="game-history">
         <thead>
           <tr>
             <th>Your Guesses</th>
@@ -25,12 +25,6 @@
         </thead>
         <tbody>
           <!-- Display user guess history here -->
-          <tr>
-            <td>1234</td>
-            <td>2</td>
-            <td>1</td>
-          </tr>
-          <!-- Add more rows for additional guesses -->
         </tbody>
       </table>
     </div>
@@ -40,7 +34,7 @@
         <input type="text" id="userGuess" placeholder="User Input">
       </div>
       <div>
-        <button class="submit">Submit</button>
+        <button class="submit" onclick="submitGuess()">Submit</button>
         <button class="clear" onclick="clearInput()">Clear</button>
       </div>
     </div>
@@ -50,6 +44,31 @@
     function clearInput() {
       document.getElementById("userGuess").value = "";
     }
+
+    function submitGuess() {
+      var userGuess = document.getElementById("userGuess").value;
+      
+      var xhr = new XMLHttpRequest();
+      xhr.open("POST", "/game", true);
+      xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+      xhr.onreadystatechange = function() {
+        if (xhr.readyState === XMLHttpRequest.DONE) {
+          var response = JSON.parse(xhr.responseText);
+          alert(response.message); // Display the response message
+          if (response.message !== "Game is already won. You cannot submit more guesses.") {
+            // Update the guess history table
+            var guessHistoryTable = document.getElementById("guess-history").getElementsByTagName('tbody')[0];
+            var newRow = guessHistoryTable.insertRow();
+            newRow.innerHTML = "<td>" + userGuess + "</td><td>" + response.bulls + "</td><td>" + response.cows + "</td>";
+          }
+          if (response.message === "Congratulations! You guessed the correct number.") {
+            window.location.href = "/leaderboard"; // Redirect to leaderboard page if game is won
+          }
+        }
+      };
+      xhr.send("user_guess=" + userGuess);
+    }
+
   </script>
 </body>
 
