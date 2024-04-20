@@ -47,13 +47,13 @@
       document.getElementById("userGuess").value = "";
     }
 
-    function submitGuess() {
-      console.log("Submit button clicked");
-      var userGuess = document.getElementById("userGuess").value;
-      var xhr = new XMLHttpRequest();
-      xhr.open("POST", "/submit_guess", true);
-      xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-      xhr.onreadystatechange = function() {
+  function submitGuess() {
+    console.log("Submit button clicked");
+    var userGuess = document.getElementById("userGuess").value;
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "/submit_guess", true);
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    xhr.onreadystatechange = function() {
       if (xhr.readyState === XMLHttpRequest.DONE) {
         var response = JSON.parse(xhr.responseText);
         alert(response.message); // Display the response message
@@ -71,6 +71,7 @@
     xhr.send("user_guess=" + userGuess);
     console.log("Sending XMLHttpRequest");
   }
+
 
   </script>
 </body>
