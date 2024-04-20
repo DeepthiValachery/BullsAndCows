@@ -45,19 +45,21 @@ def signup_page():
 def game_page():
     #generate the daily secret number for the game
     secret_number = generate_secret_number()
-    # current_user_ID = current_user.id
+    current_user_ID = 1
     #filter game by existing user and secret number
     existing_game = CurrentGame.query.filter_by(userID=1, secretNumber=secret_number).first()
+    #gets users guesses in the current game
+    past_guesses = UserGuesses.query.filter_by(userID = 1, gameID = 1).all()
 
     if existing_game:
         # return the user game currently
-        return render_template("game_play.html", existing_game = existing_game )
+        return render_template("game_play.html", existing_game = existing_game,  current_user_ID =  1, user_guesses=past_guesses)
     else:
         # No existing game with the same user ID and secret number, add the new game to the database
-        new_game = CurrentGame(userID= 1, secretNumber=secret_number, is_Won=False)
+        new_game = CurrentGame(userID=1, secretNumber=secret_number, is_Won=False)
         db.session.add(new_game)
         db.session.commit()
-        return render_template("game_play.html", new_game = new_game)
+        return render_template("game_play.html", new_game = new_game,  current_user_ID= current_user_ID, user_guesses=past_guesses)
         
 
 @index_views.route("/leaderboard", methods=['GET'])

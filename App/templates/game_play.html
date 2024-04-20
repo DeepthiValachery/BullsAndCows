@@ -15,8 +15,9 @@
       <h1>Bulls & Cows</h1>
       <a href="/leaderboard" class="button">View History</a>
     </div>
-    
+
     <div class="game-card">
+    <div style="max-height: 50vh; overflow-y: scroll;">
       <table id="guess-history">
         <thead>
           <tr>
@@ -26,9 +27,17 @@
           </tr>
         </thead>
         <tbody>
-          <!-- Display user guess history here -->
+            <!-- Display user guess history here -->
+            {% for guess in user_guesses %}
+            <tr>
+            <td>{{ guess.guess }}</td>
+            <td>{{ guess.bullsCount }}</td>
+            <td>{{ guess.cowsCount }}</td>
+            </tr>
+            {% endfor %}
         </tbody>
       </table>
+      </div>
     </div>
 
     <div class="gameplay">
