@@ -1,4 +1,5 @@
 from flask import Blueprint, redirect, render_template, request, send_from_directory, jsonify, url_for
+from flask_jwt_extended import jwt_required
 from App.models import db, CurrentGame, User
 from App.controllers import create_user, login, get_user
 import random
@@ -41,11 +42,23 @@ def signup_page():
     return render_template("signup.html")
 
 @index_views.route("/game", methods=['GET'])
+@jwt_required()
 def game_page():
-    #generate the secret number for the game
+    #generate the daily secret number for the game
     secret_number = generate_secret_number()
-    new_game = CurrentGame(userID=1,  secretNumber = secret_number, is_Won = False)
-    return render_template("game_play.html")
+    # current_user_ID = current_user.id
+    #filter game by existing user and secret number
+    existing_game = CurrentGame.query.filter_by(userID=1, secretNumber=secret_number).first()
+
+    if existing_game:
+        # return the user game currently
+        return render_template("game_play.html", existing_game = existing_game )
+    else:
+        # No existing game with the same user ID and secret number, add the new game to the database
+        new_game = CurrentGame(userID= 1, secretNumber=secret_number, attempts_left=12, is_Won=False)
+        db.session.add(new_game)
+        db.session.commit()
+        return render_template("game_play.html", new_game = new_game)
         
 
 @index_views.route("/leaderboard", methods=['GET'])
@@ -53,30 +66,34 @@ def leaderboard_page():
     return render_template("leaderboard.html")
 
 #submit guess route
-@index_views.route("/submit_guess", methods=['POST'])
+@index_views.route("/submit_guess", methods=['GET', 'POST'])
 def submit_guess():
-    try:
-        user_guess = request.form.get ('user_guess')
-        current_game = CurrentGame.query.first()
-        if current_game is None:
-            return jsonify(message="No current game found"), 404
-            
-        if current_game.is_Won:
-            return jsonify(message="Game is already won. You cannot submit more guesses.")
-            
-        if current_game.is_game_over(user_guess):
-            current_game.is_Won = True
+    if request.method == 'POST':
+        try:
+            user_guess = request.form.get('user_guess')
+            current_game = CurrentGame.query.first()
+            if current_game is None:
+                return jsonify(message="No current game found"), 404
+                
+            if current_game.is_Won:
+                return jsonify(message="Game is already won. You cannot submit more guesses.")
+                
+            if current_game.is_game_over(user_guess):
+                current_game.is_Won = True
+                user_guesses = UserGuesses(userID=current_game.userID, gameID=current_game.id, guess=user_guess)
+                db.session.add(user_guesses)
+                db.session.commit()
+                return jsonify(message="Congratulations! You guessed the correct number.")
+                
+            bulls, cows = current_game.check_guess(user_guess)
             user_guesses = UserGuesses(userID=current_game.userID, gameID=current_game.id, guess=user_guess)
+            user_guesses.bullsCount = bulls
+            user_guesses.cowsCount = cows
             db.session.add(user_guesses)
             db.session.commit()
-            return jsonify(message="Congratulations! You guessed the correct number.")
-            
-        bulls, cows = current_game.check_guess(user_guess)
-        user_guesses = UserGuesses(userID=current_game.userID, gameID=current_game.id, guess=user_guess)
-        user_guesses.bullsCount = bulls
-        user_guesses.cowsCount = cows
-        db.session.add(user_guesses)
-        db.session.commit()
-        return jsonify(message="Incorrect guess. Keep trying!")
-    except Exception as e:
-        return jsonify(message="An error occurred: {}".format(str(e))), 500
+            return jsonify(message="Incorrect guess. Keep trying!")
+        except Exception as e:
+            return jsonify(message="An error occurred: {}".format(str(e))), 500
+    else:
+        # Handle GET request (if needed)
+        return jsonify(message="Submit a POST request to submit a guess")
