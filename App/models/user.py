@@ -42,6 +42,7 @@ class CurrentGame(db.Model):
     secretNumber = db.Column(db.String(120), nullable=False)
     #attempts_left = db.Column(db.Integer, nullable=True)
     is_Won = db.Column(db.Boolean)
+    guesses = db.relationship('UserGuesses', backref='game', lazy=True)
 
     def __init__(self, userID, secretNumber, is_Won = False):
         self.userID = userID
