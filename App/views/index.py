@@ -59,11 +59,13 @@ def game_page():
         new_game = CurrentGame(userID=1, secretNumber=secret_number, is_Won=False)
         db.session.add(new_game)
         db.session.commit()
-        return render_template("game_play.html", new_game = new_game,  current_user_ID= current_user_ID, user_guesses=past_guesses)
+        return render_template("game_play.html", new_game = new_game,  current_user_ID= current_user_ID)
 
 @index_views.route("/leaderboard", methods=['GET'])
 def leaderboard_page():
-    return render_template("leaderboard.html")
+    #get all the games asscoiated with the user
+    past_games = CurrentGame.query.filter_by(userID=1).all()
+    return render_template("leaderboard.html", past_games=past_games)
 
 #submit guess route
 @index_views.route("/submit_guess", methods=['GET', 'POST'])

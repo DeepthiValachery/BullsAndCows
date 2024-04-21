@@ -14,10 +14,12 @@
         <div class="card">
             <ul>
                 <!-- List of attempts goes here -->
-                <li>Day 9: 5 attempts</li>
-                <li>Day 10: 6 attempts</li>
+                {% for game in past_games %}
+                    <li>Game {{ game.id }}: {{ game.guesses|length }} attempts</li>
+                {% endfor %}
+                <!-- <li>Day 10: 6 attempts</li>
                 <li>Day 2: 8 attempts</li>
-                <li>Day 5: 10 attempts</li>
+                <li>Day 5: 10 attempts</li> -->
                 <!-- Add more attempts as needed -->
             </ul>
         </div>
