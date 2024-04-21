@@ -73,7 +73,6 @@ def leaderboard_page():
 @index_views.route("/submit_guess", methods=['GET', 'POST'])
 def submit_guess():
     if request.method == 'POST':
-        try:
             user_guess = request.form.get('user_guess')
             current_game = CurrentGame.query.first()
             if current_game is None:
@@ -96,8 +95,3 @@ def submit_guess():
             db.session.add(user_guesses)
             db.session.commit()
             return jsonify(message="Incorrect guess. Keep trying!", bulls=bulls, cows=cows)
-        except Exception as e:
-            return jsonify(message="An error occurred: {}".format(str(e))), 500
-    else:
-        # Handle GET request (if needed)
-        return jsonify(message="Submit a POST request to submit a guess")
