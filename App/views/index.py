@@ -58,10 +58,10 @@ def game_page():
     current_user_ID = 1
     #filter game by existing user and secret number
     existing_game = CurrentGame.query.filter_by(userID=1, secretNumber=secret_number).first()
-    #gets users guesses in the current game
-    past_guesses = UserGuesses.query.filter_by(userID = 1, gameID = 1).all()
 
     if existing_game:
+        #gets users guesses in the current game
+        past_guesses = UserGuesses.query.filter_by(userID = 1, gameID = existing_game.id).all()
         # return the user game currently
         return render_template("game_play.html", existing_game = existing_game,  current_user_ID =  1, user_guesses=past_guesses)
     else:
