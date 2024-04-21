@@ -9,17 +9,14 @@
 
 <body>
     <div class="ingame-main">
-        <h1 class="title">Your Leaderboard</h1>
+        <h1 class="title">{{user.username}}'s Leaderboard</h1>
 
         <div class="card">
             <ul>
                 <!-- List of attempts goes here -->
                 {% for game in past_games %}
                     <li>Game {{ game.id }}: {{ game.guesses|length }} attempts</li>
-                {% endfor %} 
-                <!-- <li>Day 10: 6 attempts</li>
-                <li>Day 2: 8 attempts</li>
-                <li>Day 5: 10 attempts</li> -->
+                {% endfor %}
                 <!-- Add more attempts as needed -->
             </ul>
         </div>

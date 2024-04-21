@@ -64,8 +64,10 @@ def game_page():
 @index_views.route("/leaderboard", methods=['GET'])
 def leaderboard_page():
     #get all the games asscoiated with the user
-    past_games = CurrentGame.query.filter_by(userID=1).all()
-    return render_template("leaderboard.html", past_games=past_games)
+    current_user_ID= 1
+    past_games = CurrentGame.query.filter_by(userID=current_user_ID).all()
+    user = User.query.filter_by(id=current_user_ID).first()
+    return render_template("leaderboard.html", past_games=past_games, current_user_ID=current_user_ID, user=user)
 
 #submit guess route
 @index_views.route("/submit_guess", methods=['GET', 'POST'])
