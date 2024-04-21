@@ -7,18 +7,32 @@ from datetime import date, datetime
 
 index_views = Blueprint('index_views', __name__, template_folder='../templates')
 
+# Define a global variable to store the last generated number and its date
+last_generated = {"date": None, "number": None}
+
 #function to generate the secret number
 def generate_secret_number():
-    # Use the current date to seed the random number generator
-    today = date.today()
-    random.seed(today.strftime("%Y%m%d"))
-
-    # Generate a list of unique random digits
-    secret_digits = random.sample(range(10), 4)
-    #return secret_digits
+    global last_generated
     
-    # Convert the list of digits to a string --> only used if its being compared to a string
-    secret_number = ''.join(map(str, secret_digits))
+    # Get today's date
+    today = date.today()
+    
+    # Check if a number has been generated today
+    if last_generated["date"] != today:
+        # Generate a new number
+        random.seed(today.strftime("%Y%m%d"))
+          # Generate a list of unique random digits
+        secret_digits = random.sample(range(10), 4)
+         # Convert the list of digits to a string --> only used if its being compared to a string
+        secret_number = ''.join(map(str, secret_digits))
+        
+        # Update last_generated with today's date and the new number
+        last_generated["date"] = today
+        last_generated["number"] = secret_number
+    else:
+        # Return the previously generated number
+        secret_number = last_generated["number"]
+    
     return secret_number
 
 @index_views.route('/', methods=['GET'])
@@ -31,10 +45,6 @@ def init():
     db.create_all()
     create_user('bob', 'bobpass')
     return jsonify(message='db initialized!')
-
-# @index_views.route('/health', methods=['GET'])
-# def health_check():
-#     return jsonify({'status':'healthy'})
 
 # used on login page to redirect to the signup page alone
 @index_views.route("/signup", methods=['GET'])
