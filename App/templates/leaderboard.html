@@ -15,7 +15,7 @@
             <ul>
                 <!-- List of attempts goes here -->
                 {% for game in past_games %}
-                    <li>{{ game.created_at.strftime("%Y-%m-%d") }}: {{ game.guesses|length }} attempt(s)</li>
+                    <li>Game {{ game.id }}: {{ game.guesses|length }} attempts</li>
                 {% endfor %}
                 <!-- Add more attempts as needed -->
             </ul>
