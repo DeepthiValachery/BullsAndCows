@@ -44,11 +44,11 @@ class CurrentGame(db.Model):
     is_Won = db.Column(db.Boolean)
     guesses = db.relationship('UserGuesses', backref='game', lazy=True)
 
-    def __init__(self, userID, secretNumber, is_Won = False):
+    def __init__(self, userID, secretNumber, is_Won = False,  created_at=None):
         self.userID = userID
         self.secretNumber = secretNumber
         #self.attempts_left = attempts_left
-        self.is_Won = is_Won
+        self.created_at = created_at if created_at else datetime.utcnow()
 
     def is_game_over(self, guess):
         if (guess == self.secretNumber):
