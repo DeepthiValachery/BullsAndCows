@@ -1,7 +1,6 @@
 from werkzeug.security import check_password_hash, generate_password_hash
 from App.database import db
 from datetime import datetime, timedelta 
-from sqlalchemy import DateTime
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -44,7 +43,6 @@ class CurrentGame(db.Model):
     #attempts_left = db.Column(db.Integer, nullable=True)
     is_Won = db.Column(db.Boolean)
     guesses = db.relationship('UserGuesses', backref='game', lazy=True)
-    created_at = db.Column(DateTime, nullable=False, default=datetime.utcnow)
 
     def __init__(self, userID, secretNumber, is_Won = False):
         self.userID = userID
