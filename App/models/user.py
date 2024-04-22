@@ -1,3 +1,4 @@
+
 from werkzeug.security import check_password_hash, generate_password_hash
 from App.database import db
 from datetime import datetime, timedelta 
@@ -46,10 +47,11 @@ class CurrentGame(db.Model):
     guesses = db.relationship('UserGuesses', backref='game', lazy=True)
     created_at = db.Column(DateTime, nullable=False, default=datetime.utcnow)
 
-    def __init__(self, userID, secretNumber, is_Won = False,  created_at=None):
+    def __init__(self, userID, secretNumber, is_Won = False, created_at =None):
         self.userID = userID
         self.secretNumber = secretNumber
         #self.attempts_left = attempts_left
+        self.is_Won = is_Won
         self.created_at = created_at if created_at else datetime.utcnow()
 
     def is_game_over(self, guess):
@@ -83,5 +85,3 @@ class UserGuesses(db.Model):
         bulls,cows = game.check_guess (guess)
         self.bullsCount = bulls
         self.cowsCount = cows
-
-

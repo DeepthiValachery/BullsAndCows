@@ -1,5 +1,6 @@
 
 
+
 <!DOCTYPE html>
 <html>
 
@@ -40,9 +41,13 @@
 
     <div class="gameplay">
       <div class="guess-box">
-        <input type="text" id="userGuess" placeholder="User Input">
-      </div>
-      <div>
+        <input type="text" id="userGuess" placeholder="User Input" maxlength="4">
+    </div>
+    <script>
+    document.getElementById("userGuess").addEventListener("input", function() {
+        this.value = this.value.replace(/[^0-9]/g, '');
+    });
+    </script>
         <button class="submit" onclick="submitGuess()">Submit</button>
         <button class="clear" onclick="clearInput()">Clear</button>
         <div id="timer"></div> <!--Timer-->
