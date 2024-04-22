@@ -8,18 +8,13 @@
 </head>
 
 <body>
-	<!-- {% with messages = get_flashed_messages() %}
+	{% with messages = get_flashed_messages() %}
     {% if messages %}
-        <div class="flash-messages">
-            <ul>
-            {% for message in messages %}
-                <li>{{ message }}</li>
-            {% endfor %}
-            </ul>
-        </div>
+        {% for message in messages %}
+            <div class="alert alert-danger" role="alert">{{ message }}</div>
+        {% endfor %}
     {% endif %}
-{% endwith %} -->
-
+	{% endwith %}
 	<div class="main">
 		<h1>Bulls & Cows</h1>
 		<form method="POST" action="/login">
